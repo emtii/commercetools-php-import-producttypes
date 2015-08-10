@@ -71,21 +71,28 @@ function getProductTypes() {
  *       and put this completely into an external config file.
  */
 function postProductTypes ($data) {
+
     $api = 'https://api.sphere.io/';
     $project = '';
     $endpoint = '/product-types';
     $bearer = '';
 
-    $ch = curl_init($api . $project . $endpoint);
+    // get files and encode to valid json strings
+    $jsondata = file_get_contents($data);
+
+    $url = $api . $project . $endpoint;
+
+    $ch = curl_init($url);
+
     importLog('Initiated cURL Session');
 
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsondata);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER,
         array(
             'Content-Type: application/json',
-            'Content-Length: ' . strlen($data),
+            'Content-Length: ' . strlen($jsondata),
             'Authorization: Bearer ' . $bearer
         )
     );
@@ -96,6 +103,7 @@ function postProductTypes ($data) {
 
     curl_close($ch);
     importLog('Closed cURL Session');
+    var_dump($result);
 
     // returns result, but is not handled so far
     // @todo Should handle the result in another helper method somehow, e.g. for saving created IDs.

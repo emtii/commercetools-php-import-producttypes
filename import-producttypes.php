@@ -31,6 +31,7 @@ function _run ($files) {
     importLog('START Import');
 
     foreach ($files as $file) {
+        $file = __DIR__ . '/data/types_nested/' . $file;
         importLog($file);
 
         if(file_exists($file)){
